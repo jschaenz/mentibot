@@ -1,0 +1,7 @@
+mentibot:
+  owner: 'mentiofficial'
+  irc: "oauth:"
+  command-prefix: ']'
+  channels:
+    - "mentiofficial"
+    - "hotbear1110"
