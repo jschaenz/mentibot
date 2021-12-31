@@ -23,6 +23,9 @@ class CommandHandler(
     private val commands: Commands,
 
     @Autowired
+    private val git: Git,
+
+    @Autowired
     private val help: Help,
 
     @Autowired
@@ -30,9 +33,6 @@ class CommandHandler(
 
     @Autowired
     private val ping: Ping,
-
-    @Autowired
-    private val test: Test
 
 ) {
     init {
@@ -43,10 +43,10 @@ class CommandHandler(
                     when (message[0]) {
                         properties.prefix + bot.commandName -> bot.call(event)
                         properties.prefix + commands.commandName -> commands.call(event)
+                        properties.prefix + git.commandName -> git.call(event)
                         properties.prefix + help.commandName -> help.call(event)
                         properties.prefix + js.commandName -> js.call(event, event.message.removePrefix(properties.prefix + js.commandName))
                         properties.prefix + ping.commandName -> ping.call(event)
-                        properties.prefix + test.commandName -> test.call(event)
                     }
                 }
             }

@@ -14,7 +14,7 @@ class Ping {
         val rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
         event.twitchChat.sendMessage(
             event.channel.name,
-            "uptime: " + rb.uptime / 1000 + "s running on: JVM " + rb.vmVersion
+            "uptime: ${rb.uptime / 1000}s running on: JVM ${rb.vmVersion}"
         )
     }
 }
