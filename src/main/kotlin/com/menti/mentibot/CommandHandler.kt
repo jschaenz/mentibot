@@ -26,6 +26,9 @@ class CommandHandler(
     private val help: Help,
 
     @Autowired
+    private val js: JS,
+
+    @Autowired
     private val ping: Ping,
 
     @Autowired
@@ -38,11 +41,12 @@ class CommandHandler(
                 if (event.message.startsWith(properties.prefix)) {
                     val message: Array<String> = event.message.split(" ").toTypedArray()
                     when (message[0]) {
-                        properties.prefix + "bot" -> bot.call(event)
-                        properties.prefix + "commands" -> commands.call(event)
-                        properties.prefix + "help" -> help.call(event)
-                        properties.prefix + "ping" -> ping.call(event)
-                        properties.prefix + "test" -> test.call(event)
+                        properties.prefix + bot.commandName -> bot.call(event)
+                        properties.prefix + commands.commandName -> commands.call(event)
+                        properties.prefix + help.commandName -> help.call(event)
+                        properties.prefix + js.commandName -> js.call(event, event.message.removePrefix(properties.prefix + js.commandName))
+                        properties.prefix + ping.commandName -> ping.call(event)
+                        properties.prefix + test.commandName -> test.call(event)
                     }
                 }
             }
