@@ -3,30 +3,30 @@ package com.menti.mentibot.config
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
-import org.springframework.context.annotation.Bean
+import com.menti.mentibot.properties.BotProperties
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class BotConfig {
-
-    private final val irc:String = ""
-
-    @Bean
-    fun twitchClient(): TwitchClient {
-        val credential = OAuth2Credential(
-            "twitch",
-            irc
+class BotConfig(
+    @Autowired private val properties: BotProperties
+) {
+    final var twitchClient: TwitchClient = TwitchClientBuilder.builder()
+        .withChatAccount(
+            OAuth2Credential(
+                "twitch",
+                properties.irc
+            )
         )
+        .withEnableChat(true)
+        .withBotOwnerId("58055575")
+        .withCommandTrigger(properties.prefix)
+        .build()
 
-        val twitchClient = TwitchClientBuilder.builder()
-            .withChatAccount(credential)
-            .withEnableChat(true)
-            .build()
-
-        twitchClient.chat.joinChannel("mentiofficial")
-        twitchClient.chat.joinChannel("hotbear1110")
-
-        return twitchClient
+    init {
+        for (channel in properties.channels) {
+            twitchClient.chat.joinChannel(channel)
+        }
     }
 
 }

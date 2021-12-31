@@ -1,11 +1,12 @@
 package com.menti.mentibot
 
+import com.menti.mentibot.properties.BotProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-@ConfigurationPropertiesScan
+@EnableConfigurationProperties(BotProperties::class)
 class MentibotApplication
 
 fun main(args: Array<String>) {
