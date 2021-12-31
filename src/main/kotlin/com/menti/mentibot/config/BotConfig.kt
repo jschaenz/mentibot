@@ -9,7 +9,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class BotConfig(
-    @Autowired private val properties: BotProperties
+    @Autowired
+    private val properties: BotProperties
 ) {
     final var twitchClient: TwitchClient = TwitchClientBuilder.builder()
         .withChatAccount(
@@ -19,7 +20,7 @@ class BotConfig(
             )
         )
         .withEnableChat(true)
-        .withBotOwnerId("58055575")
+        .withBotOwnerId(properties.ownerId)
         .withCommandTrigger(properties.prefix)
         .build()
 
