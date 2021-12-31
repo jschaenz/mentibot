@@ -5,7 +5,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class Bot {
+
+    final val commandName: String = "bot"
+
     fun call(event: ChannelMessageEvent) {
-        event.twitchChat.sendMessage(event.channel.name, "bot")
+        event.twitchChat.sendMessage(event.channel.name, "mentibot is a bot made by mentiofficial, written in Kotlin")
     }
 }
