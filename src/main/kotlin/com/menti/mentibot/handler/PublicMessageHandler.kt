@@ -22,7 +22,7 @@ class PublicMessageHandler(
         config.twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
             if (event.message.startsWith(properties.prefix)) {
                 send(
-                    commandHandler.invokeCommand(event.message, event.channel.name, event.permissions),
+                    commandHandler.invokeCommand(event.message.replace("]", ""), event.channel.name, event.permissions),
                     event.channel.name
                 )
             }

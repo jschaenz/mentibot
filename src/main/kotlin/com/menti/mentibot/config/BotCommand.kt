@@ -4,5 +4,6 @@ import com.github.twitch4j.common.enums.CommandPermission
 
 interface BotCommand {
     val commandName: String
-    fun call(message: String, channel: String, permissions: Set<CommandPermission>): String?
+    val description: String
+    fun call(message: String, channel: String, permissions: Set<CommandPermission>, commands: Set<BotCommand>): String
 }

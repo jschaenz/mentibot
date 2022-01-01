@@ -32,7 +32,6 @@ dependencies {
     implementation("org.openjdk.nashorn:nashorn-core:15.3")
     implementation("com.google.guava:guava:31.0.1-jre")
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
