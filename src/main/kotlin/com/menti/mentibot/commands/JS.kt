@@ -25,7 +25,7 @@ class JS : BotCommand{
         return try {
             val manager = ScriptEngineManager()
             val engine = manager.getEngineByName("JavaScript")
-            return engine.eval(message).toString()
+            engine.eval(message).toString()
         } catch (e: ScriptException) {
             "${e.message}"
         }

@@ -27,7 +27,7 @@ class CommandHandler {
     fun invokeCommand(message: String, channel: String, permissions: Set<CommandPermission>): String {
         for (command in commandsInstances) {
             if (message.startsWith(command.commandName)) {
-                return command.call(message, channel, permissions, commandsInstances)
+                return command.call(message.replace(command.commandName, ""), channel, permissions, commandsInstances)
             }
         }
         return ""
