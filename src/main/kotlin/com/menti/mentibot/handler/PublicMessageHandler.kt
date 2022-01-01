@@ -15,8 +15,10 @@ class PublicMessageHandler(
     private val properties: BotProperties,
 
     @Autowired
-    private val commandHandler: CommandHandler
+    private val commandHandler: CommandHandler,
 ) {
+
+    private var lastMessage: String = ""
 
     init {
         config.twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
@@ -30,6 +32,11 @@ class PublicMessageHandler(
     }
 
     fun send(content: String?, channel: String) {
+        var message = content
+        if (content == lastMessage) {
+            message += "\uE0000"
+        }
         config.twitchClient.chat.sendMessage(channel, content)
+        lastMessage = "$content"
     }
 }
