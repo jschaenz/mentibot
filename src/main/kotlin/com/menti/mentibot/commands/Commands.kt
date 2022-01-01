@@ -3,7 +3,7 @@ package com.menti.mentibot.commands
 import com.github.twitch4j.common.enums.CommandPermission
 import com.menti.mentibot.config.BotCommand
 
-class Commands :BotCommand{
+class Commands : BotCommand {
 
     override val commandName: String = "commands"
 
@@ -15,7 +15,11 @@ class Commands :BotCommand{
         permissions: Set<CommandPermission>,
         commands: Set<BotCommand>
     ): String {
-        return "placeholder"
+        var commandNames = ""
+        commands.forEach { c ->
+            commandNames += "${c.commandName}, "
+        }
+        return "current commands are: $commandNames".removeSuffix(", ")
     }
 
 }
