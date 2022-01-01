@@ -1,6 +1,7 @@
 package com.menti.mentibot.commands
 
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
+import com.github.twitch4j.common.enums.CommandPermission
+import com.menti.mentibot.config.BotCommand
 import org.springframework.stereotype.Component
 import java.net.URI
 import java.net.http.HttpClient
@@ -8,10 +9,10 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 @Component
-class Git {
-    final val commandName: String = "git"
+class Git : BotCommand {
+    final override val commandName: String = "git"
 
-    fun call(event: ChannelMessageEvent) {
+    override fun call(message: String, channel: String, permissions: Set<CommandPermission>): String {
         val client = HttpClient.newBuilder()
             .build()
 
@@ -28,9 +29,6 @@ class Git {
             .replace("\"", "")
             .replace("created_at", "")
 
-        event.twitchChat.sendMessage(
-            event.channel.name,
-            "https://github.com/jschaenz/mentibot last update$response"
-        )
+        return "https://github.com/jschaenz/mentibot last update$response"
     }
 }

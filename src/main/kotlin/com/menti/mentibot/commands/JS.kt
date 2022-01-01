@@ -1,27 +1,28 @@
 package com.menti.mentibot.commands
 
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
+import com.github.twitch4j.common.enums.CommandPermission
+import com.menti.mentibot.config.BotCommand
 import org.springframework.stereotype.Component
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 
-
 @Component
-class JS {
+class JS : BotCommand {
 
-    final val commandName: String = "js"
+    final override val commandName: String = "js"
 
-    fun call(event: ChannelMessageEvent, message: String) {
+    override fun call(message: String, channel: String, permissions: Set<CommandPermission>): String {
 
-        val manager = ScriptEngineManager()
-        val engine = manager.getEngineByName("JavaScript")
-
-        try {
-            val res = engine.eval(message)
-            event.twitchChat.sendMessage(event.channel.name, res.toString())
-        } catch (e: ScriptException) {
-            event.twitchChat.sendMessage(event.channel.name, e.message)
+        if (!permissions.contains(CommandPermission.OWNER)) {
+            return ""
         }
 
+        return try {
+            val manager = ScriptEngineManager()
+            val engine = manager.getEngineByName("JavaScript")
+            return engine.eval(message).toString()
+        } catch (e: ScriptException) {
+            "${e.message}"
+        }
     }
 }

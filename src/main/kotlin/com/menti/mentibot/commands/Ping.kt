@@ -1,20 +1,18 @@
 package com.menti.mentibot.commands
 
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
+import com.github.twitch4j.common.enums.CommandPermission
+import com.menti.mentibot.config.BotCommand
 import org.springframework.stereotype.Component
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
 
 @Component
-class Ping {
+class Ping : BotCommand {
 
-    final val commandName: String = "ping"
+    final override val commandName: String = "ping"
 
-    fun call(event: ChannelMessageEvent) {
+    override fun call(message: String, channel: String, permissions: Set<CommandPermission>): String {
         val rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
-        event.twitchChat.sendMessage(
-            event.channel.name,
-            "uptime: ${rb.uptime / 1000}s running on: JVM ${rb.vmVersion}"
-        )
+        return "uptime ${rb.uptime / 1000}s running on JVM ${rb.vmVersion}"
     }
 }
