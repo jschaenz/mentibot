@@ -31,9 +31,9 @@ class Git : BotCommand {
                 .ofString()
         )
             .body()
-            .split(",")[65]
+            .split(",")[66]
             .replace("\"", "")
-            .replace("created_at", "")
+            .replace("updated_at", "")
 
         return "https://github.com/jschaenz/mentibot last update$response"
     }
