@@ -7,6 +7,9 @@ import com.menti.mentibot.properties.BotProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 
+/**
+ * Creation of twitch4j bot client with correct properties
+ */
 @Configuration
 class BotConfig(
     @Autowired

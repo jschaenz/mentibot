@@ -6,11 +6,17 @@ import com.menti.mentibot.config.BotCommand
 import org.springframework.stereotype.Component
 import java.util.stream.Collectors
 
+/**
+ * Handles all commands and how they are invoked
+ */
 @Component
 class CommandHandler {
 
     private val commandsInstances: MutableSet<BotCommand> = mutableSetOf()
 
+    /**
+     * Instantiates all classes in the commands package
+     */
     init {
         val commands = ClassPath.from(ClassLoader.getSystemClassLoader())
             .allClasses
@@ -24,6 +30,9 @@ class CommandHandler {
         }
     }
 
+    /**
+     * Invokes the correct command
+     */
     fun invokeCommand(message: String, channel: String, permissions: Set<CommandPermission>): String {
         for (command in commandsInstances) {
             if (message.startsWith(command.commandName)) {

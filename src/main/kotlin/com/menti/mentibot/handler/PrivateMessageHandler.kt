@@ -6,6 +6,9 @@ import com.menti.mentibot.properties.BotProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+/**
+ * Handles all private messages
+ */
 @Component
 class PrivateMessageHandler(
     @Autowired

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import kotlinx.coroutines.*
 
+/**
+ * Handles all public (regular chat) messages
+ */
 @Component
 class PublicMessageHandler(
     @Autowired
@@ -27,6 +30,11 @@ class PublicMessageHandler(
         setup()
     }
 
+    /**
+     * If prefix is detected, invokes the given command in a coroutine.
+     * Then sets the timedOut flag to true to adhere to global 1s slowmode.
+     * Another coroutine then waits 1s after the flag is set to true to set it back to false.
+     */
     @OptIn(DelicateCoroutinesApi::class)
     private final fun setup() = runBlocking {
         config.twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
