@@ -7,7 +7,7 @@ class Bot : BotCommand {
 
     override val commandName: String = "bot"
 
-    override val description: String = ""
+    override val description: String = "Gives some basic Information about the bot"
 
     override fun call(
         message: String,

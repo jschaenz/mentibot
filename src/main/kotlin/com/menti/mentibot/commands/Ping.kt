@@ -9,7 +9,7 @@ class Ping : BotCommand {
 
     override val commandName: String = "ping"
 
-    override val description: String = ""
+    override val description: String = "Pings the Bot"
 
     override fun call(
         message: String,

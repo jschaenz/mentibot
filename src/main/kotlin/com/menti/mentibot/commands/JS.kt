@@ -7,9 +7,9 @@ import javax.script.ScriptException
 
 class JS : BotCommand{
 
-    override val description: String = ""
-
     override val commandName: String = "js"
+
+    override val description: String = "Executes the given JavaScript code"
 
     override fun call(
         message: String,

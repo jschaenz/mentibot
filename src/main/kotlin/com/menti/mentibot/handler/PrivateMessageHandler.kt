@@ -22,7 +22,7 @@ class PrivateMessageHandler(
         config.twitchClient.eventManager.onEvent(PrivateMessageEvent::class.java) { event ->
             if (event.message.startsWith(properties.prefix)) {
                 send(
-                    commandHandler.invokeCommand(event.message.replace("]", ""), event.user.name, event.permissions),
+                    commandHandler.invokeCommand(event.message.replace(properties.prefix, ""), event.user.name, event.permissions),
                     event.user.name
                 )
             }

@@ -11,7 +11,7 @@ class Git : BotCommand {
 
     override val commandName: String = "git"
 
-    override val description: String = ""
+    override val description: String = "Link to the github repo with timestamp of last change"
 
     override fun call(
         message: String,
