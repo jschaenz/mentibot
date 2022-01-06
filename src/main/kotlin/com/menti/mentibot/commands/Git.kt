@@ -13,6 +13,8 @@ class Git : BotCommand {
 
     override val description: String = "Link to the github repo with timestamp of last change"
 
+    override val cooldown: Int = 5
+
     override fun call(
         message: String,
         channel: String,

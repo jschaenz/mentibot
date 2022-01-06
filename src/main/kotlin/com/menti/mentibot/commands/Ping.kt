@@ -11,6 +11,8 @@ class Ping : BotCommand {
 
     override val description: String = "Pings the Bot"
 
+    override val cooldown: Int = 5
+
     override fun call(
         message: String,
         channel: String,

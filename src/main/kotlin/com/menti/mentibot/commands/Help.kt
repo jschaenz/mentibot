@@ -9,6 +9,8 @@ class Help : BotCommand {
 
     override val description: String = "Gives the description of the specified command"
 
+    override val cooldown: Int = 0
+
     override fun call(
         message: String,
         channel: String,

@@ -11,6 +11,8 @@ class JS : BotCommand{
 
     override val description: String = "Executes the given JavaScript code"
 
+    override val cooldown: Int = 0
+
     override fun call(
         message: String,
         channel: String,

@@ -43,6 +43,7 @@ class PublicMessageHandler(
                     send(
                         commandHandler.invokeCommand(
                             event.message.replace(properties.prefix, ""),
+                            event.user.name,
                             event.channel.name,
                             event.permissions
                         ),
