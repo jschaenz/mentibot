@@ -1,6 +1,6 @@
 package com.menti.mentibot.model
 
-import com.menti.mentibot.enums.SuggestionStatus
+import com.menti.mentibot.enums.SuggestionStatusEnum
 import org.jetbrains.annotations.NotNull
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -18,5 +18,5 @@ class SuggestionModel(
     val suggester: String,
 
     @NotNull
-    val status: SuggestionStatus
+    val status: SuggestionStatusEnum
 )

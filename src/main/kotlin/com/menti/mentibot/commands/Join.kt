@@ -3,17 +3,15 @@ package com.menti.mentibot.commands
 import com.github.twitch4j.common.enums.CommandPermission
 import com.menti.mentibot.config.BotCommand
 import com.menti.mentibot.config.BotConfig
+import com.menti.mentibot.enums.CustomPermissionEnum
 import com.menti.mentibot.model.UserModel
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
-class Help : BotCommand {
-
-    override val commandName: String = "help"
-
-    override val description: String = "Gives the description of the specified command"
-
-    override val cooldown: Int = 0
+class Join : BotCommand {
+    override val commandName: String = "join"
+    override val description: String = "Joins the given channel"
+    override val cooldown: Int = 10
 
     override fun call(
         message: String,
@@ -26,17 +24,15 @@ class Help : BotCommand {
         mbeanServerConnection: MBeanServerConnection,
         config: BotConfig
     ): String {
-
-        if(message.isEmpty()){
-            return "Please specify a command!"
+        if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {
+            return ""
         }
-
-        commands.forEach { c ->
-            if (c.commandName == message.split(" ")[0]) {
-                return c.description;
-            }
+        var channelToJoin = message.split(" ")[0].lowercase()
+        try {
+            config.twitchClient.chat.joinChannel(channelToJoin)
+            return "joined channel $channelToJoin"
+        } catch (e: Exception) {
+            return "${e.message}"
         }
-        return "command not found!"
     }
-
 }

@@ -1,6 +1,7 @@
 package com.menti.mentibot.config
 
 import com.github.twitch4j.common.enums.CommandPermission
+import com.menti.mentibot.model.UserModel
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
@@ -15,9 +16,11 @@ interface BotCommand {
         message: String,
         channel: String,
         user: String,
-        permissions: Set<CommandPermission>,
+        roles: Set<CommandPermission>,
+        permissions: UserModel?,
         commands: Set<BotCommand>,
         mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection
+        mbeanServerConnection: MBeanServerConnection,
+        config: BotConfig
     ): String
 }

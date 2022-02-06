@@ -3,10 +3,15 @@ package com.menti.mentibot.handler
 import com.github.twitch4j.common.enums.CommandPermission
 import com.google.common.reflect.ClassPath
 import com.menti.mentibot.config.BotCommand
+import com.menti.mentibot.config.BotConfig
+import com.menti.mentibot.enums.CustomPermissionEnum
+import com.menti.mentibot.model.UserModel
 import com.sun.tools.attach.VirtualMachine
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Component
 import java.util.stream.Collectors
 import javax.management.MBeanServerConnection
@@ -63,18 +68,27 @@ class CommandHandler(
     /**
      * Invokes the correct command
      */
-    fun invokeCommand(message: String, user: String, channel: String, permissions: Set<CommandPermission>): String {
+    fun invokeCommand(message: String, user: String, channel: String, roles: Set<CommandPermission>, config: BotConfig): String {
         for (command in commandsInstances) {
             if (message.startsWith(command.commandName) && !timeOuts.contains(Pair(user, command.commandName))) {
-                setTimeout(user, command)
+
+                val permissions =
+                    mongoTemplate.findOne(Query().addCriteria(Criteria.where("name").`is`(user)), UserModel::class.java)
+
+                if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {
+                    setTimeout(user, command)
+                }
+
                 return command.call(
                     message.removePrefix(command.commandName).trim(),
                     channel,
                     user,
+                    roles,
                     permissions,
                     commandsInstances,
                     mongoTemplate,
-                    mbeanServerConnection
+                    mbeanServerConnection,
+                    config
                 )
             }
         }

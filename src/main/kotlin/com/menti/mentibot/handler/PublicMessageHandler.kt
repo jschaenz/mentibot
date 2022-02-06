@@ -36,7 +36,7 @@ class PublicMessageHandler(
      * Another coroutine then waits 1s after the flag is set to true to set it back to false.
      */
     @OptIn(DelicateCoroutinesApi::class)
-    private final fun setup() = runBlocking {
+    private fun setup() = runBlocking {
         config.twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
             if (event.message.startsWith(properties.prefix) && !timedOut) {
                 GlobalScope.launch {
@@ -45,7 +45,8 @@ class PublicMessageHandler(
                             event.message.replace(properties.prefix, ""),
                             event.user.name,
                             event.channel.name,
-                            event.permissions
+                            event.permissions,
+                            config
                         ),
                         event.channel.name
                     )

@@ -1,6 +1,6 @@
 package com.menti.mentibot.enums
 
-enum class SuggestionStatus {
+enum class SuggestionStatusEnum {
     NEW,
     IMPLEMENTED,
     ACCEPTED,
