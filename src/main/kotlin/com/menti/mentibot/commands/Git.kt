@@ -19,6 +19,7 @@ class Git : BotCommand {
     override fun call(
         message: String,
         channel: String,
+        user: String,
         permissions: Set<CommandPermission>,
         commands: Set<BotCommand>,
         mongoTemplate: MongoTemplate

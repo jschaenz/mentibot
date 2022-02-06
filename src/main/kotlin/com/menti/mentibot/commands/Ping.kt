@@ -18,12 +18,13 @@ class Ping : BotCommand {
     override fun call(
         message: String,
         channel: String,
+        user: String,
         permissions: Set<CommandPermission>,
         commands: Set<BotCommand>,
         mongoTemplate: MongoTemplate
     ): String {
         val rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
-        val command: Document = Document().append("dbStats",1)
+        val command: Document = Document().append("dbStats", 1)
         val stats = mongoTemplate.db.runCommand(command)
         val totalDbObjects = stats.getLong("objects")
         val collectionCount = stats.getInteger("collections")

@@ -48,6 +48,7 @@ class CommandHandler(
                 return command.call(
                     message.removePrefix(command.commandName).trim(),
                     channel,
+                    user,
                     permissions,
                     commandsInstances,
                     mongoTemplate
