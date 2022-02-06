@@ -3,11 +3,15 @@ package com.menti.mentibot.handler
 import com.github.twitch4j.common.enums.CommandPermission
 import com.google.common.reflect.ClassPath
 import com.menti.mentibot.config.BotCommand
+import com.sun.tools.attach.VirtualMachine
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.stereotype.Component
 import java.util.stream.Collectors
+import javax.management.MBeanServerConnection
+import javax.management.remote.JMXConnectorFactory
+import javax.management.remote.JMXServiceURL
 
 /**
  * Handles all commands and how they are invoked
@@ -21,6 +25,10 @@ class CommandHandler(
     private val commandsInstances: MutableSet<BotCommand> = mutableSetOf()
 
     private val timeOuts: MutableSet<Pair<String, String>> = mutableSetOf()
+
+    private val connectedVm: VirtualMachine
+
+    private val mbeanServerConnection: MBeanServerConnection
 
     /**
      * Instantiates all classes in the commands package
@@ -36,6 +44,20 @@ class CommandHandler(
         for (command in commands) {
             commandsInstances.add(command.newInstance())
         }
+
+        //jvm
+        val vmDescriptor = VirtualMachine.list().filter { it.displayName().contains("mentibot") }[0]
+        connectedVm = VirtualMachine.attach(vmDescriptor)
+
+        var connectorAddress =
+            connectedVm.agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress")
+        if (connectorAddress == null) {
+            connectedVm.startLocalManagementAgent()
+            connectorAddress =
+                connectedVm.agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress")
+        }
+
+        mbeanServerConnection = JMXConnectorFactory.connect(JMXServiceURL(connectorAddress)).mBeanServerConnection
     }
 
     /**
@@ -51,7 +73,8 @@ class CommandHandler(
                     user,
                     permissions,
                     commandsInstances,
-                    mongoTemplate
+                    mongoTemplate,
+                    mbeanServerConnection
                 )
             }
         }

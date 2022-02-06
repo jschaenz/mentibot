@@ -3,6 +3,7 @@ package com.menti.mentibot.commands
 import com.github.twitch4j.common.enums.CommandPermission
 import com.menti.mentibot.config.BotCommand
 import org.springframework.data.mongodb.core.MongoTemplate
+import javax.management.MBeanServerConnection
 
 class Help : BotCommand {
 
@@ -18,7 +19,8 @@ class Help : BotCommand {
         user: String,
         permissions: Set<CommandPermission>,
         commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate
+        mongoTemplate: MongoTemplate,
+        mbeanServerConnection: MBeanServerConnection
     ): String {
 
         if(message.isEmpty()){

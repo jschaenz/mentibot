@@ -7,6 +7,7 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import javax.management.MBeanServerConnection
 
 class Git : BotCommand {
 
@@ -22,7 +23,8 @@ class Git : BotCommand {
         user: String,
         permissions: Set<CommandPermission>,
         commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate
+        mongoTemplate: MongoTemplate,
+        mbeanServerConnection: MBeanServerConnection
     ): String {
         val client = HttpClient.newBuilder()
             .build()

@@ -3,6 +3,7 @@ package com.menti.mentibot.commands
 import com.github.twitch4j.common.enums.CommandPermission
 import com.menti.mentibot.config.BotCommand
 import org.springframework.data.mongodb.core.MongoTemplate
+import javax.management.MBeanServerConnection
 
 class Pipe : BotCommand {
     override val commandName: String = "pipe"
@@ -17,7 +18,8 @@ class Pipe : BotCommand {
         user: String,
         permissions: Set<CommandPermission>,
         commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate
+        mongoTemplate: MongoTemplate,
+        mbeanServerConnection: MBeanServerConnection
     ): String {
         if (message.isEmpty()) {
             return "at least 1 command must be piped"
@@ -30,7 +32,15 @@ class Pipe : BotCommand {
         for (commandToInvoke in commandsToInvoke) {
             for (command in commands) {
                 if (commandToInvoke.startsWith(command.commandName)) {
-                    lastResult = command.call(lastResult, channel, user, permissions, commands, mongoTemplate)
+                    lastResult = command.call(
+                        lastResult,
+                        channel,
+                        user,
+                        permissions,
+                        commands,
+                        mongoTemplate,
+                        mbeanServerConnection
+                    )
                 }
             }
         }

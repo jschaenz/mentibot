@@ -5,6 +5,7 @@ import com.menti.mentibot.config.BotCommand
 import com.menti.mentibot.enums.SuggestionStatus
 import com.menti.mentibot.model.SuggestionModel
 import org.springframework.data.mongodb.core.MongoTemplate
+import javax.management.MBeanServerConnection
 
 class Suggest : BotCommand {
     override val commandName: String = "suggest"
@@ -19,7 +20,8 @@ class Suggest : BotCommand {
         user: String,
         permissions: Set<CommandPermission>,
         commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate
+        mongoTemplate: MongoTemplate,
+        mbeanServerConnection: MBeanServerConnection
     ): String {
         val id: Long = mongoTemplate.getCollection("suggestions").countDocuments()
 

@@ -6,6 +6,8 @@ import org.bson.Document
 import org.springframework.data.mongodb.core.MongoTemplate
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
+import javax.management.MBeanServerConnection
+import javax.management.ObjectName
 
 class Ping : BotCommand {
 
@@ -21,14 +23,22 @@ class Ping : BotCommand {
         user: String,
         permissions: Set<CommandPermission>,
         commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate
+        mongoTemplate: MongoTemplate,
+        mbeanServerConnection: MBeanServerConnection
     ): String {
+        //bot
         val rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
+
+        //db
         val command: Document = Document().append("dbStats", 1)
         val stats = mongoTemplate.db.runCommand(command)
         val totalDbObjects = stats.getLong("objects")
         val collectionCount = stats.getInteger("collections")
 
-        return "uptime: ${rb.uptime / 1000}s running on JVM: ${rb.vmVersion} items in db: $totalDbObjects across $collectionCount collections"
+        //jvm
+        val loadedClasses  = mbeanServerConnection.getAttribute(ObjectName("java.lang:type=ClassLoading"), "TotalLoadedClassCount")
+
+
+        return "uptime: ${rb.uptime / 1000}s running on JVM: ${rb.vmVersion} items in db: $totalDbObjects across $collectionCount collection(s) with $loadedClasses loaded classes"
     }
 }

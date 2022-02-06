@@ -34,6 +34,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     implementation("org.springframework.data:spring-data-mongodb:3.3.1")
     implementation("org.mongodb:mongodb-driver-sync:4.4.1")
+    implementation("org.reflections:reflections:0.10.2")
 
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
