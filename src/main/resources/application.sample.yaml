@@ -6,3 +6,9 @@ mentibot:
   channels:
     - "mentiofficial"
     - "hotbear1110"
+
+spring:
+  data:
+    mongodb:
+      uri: ""
+      databse: ""

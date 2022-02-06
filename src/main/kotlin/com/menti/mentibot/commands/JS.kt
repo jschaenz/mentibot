@@ -2,6 +2,7 @@ package com.menti.mentibot.commands
 
 import com.github.twitch4j.common.enums.CommandPermission
 import com.menti.mentibot.config.BotCommand
+import org.springframework.data.mongodb.core.MongoTemplate
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 
@@ -17,7 +18,8 @@ class JS : BotCommand{
         message: String,
         channel: String,
         permissions: Set<CommandPermission>,
-        commands: Set<BotCommand>
+        commands: Set<BotCommand>,
+        mongoTemplate: MongoTemplate
     ): String {
 
         if (!permissions.contains(CommandPermission.OWNER)) {

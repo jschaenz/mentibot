@@ -2,6 +2,7 @@ package com.menti.mentibot.commands
 
 import com.github.twitch4j.common.enums.CommandPermission
 import com.menti.mentibot.config.BotCommand
+import org.springframework.data.mongodb.core.MongoTemplate
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -19,7 +20,8 @@ class Git : BotCommand {
         message: String,
         channel: String,
         permissions: Set<CommandPermission>,
-        commands: Set<BotCommand>
+        commands: Set<BotCommand>,
+        mongoTemplate: MongoTemplate
     ): String {
         val client = HttpClient.newBuilder()
             .build()

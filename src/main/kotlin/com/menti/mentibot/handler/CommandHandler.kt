@@ -4,6 +4,8 @@ import com.github.twitch4j.common.enums.CommandPermission
 import com.google.common.reflect.ClassPath
 import com.menti.mentibot.config.BotCommand
 import kotlinx.coroutines.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.stereotype.Component
 import java.util.stream.Collectors
 
@@ -11,7 +13,10 @@ import java.util.stream.Collectors
  * Handles all commands and how they are invoked
  */
 @Component
-class CommandHandler {
+class CommandHandler(
+    @Autowired
+    val mongoTemplate: MongoTemplate
+) {
 
     private val commandsInstances: MutableSet<BotCommand> = mutableSetOf()
 
@@ -40,7 +45,13 @@ class CommandHandler {
         for (command in commandsInstances) {
             if (message.startsWith(command.commandName) && !timeOuts.contains(Pair(user, command.commandName))) {
                 setTimeout(user, command)
-                return command.call(message.removePrefix(command.commandName), channel, permissions, commandsInstances)
+                return command.call(
+                    message.removePrefix(command.commandName).trim(),
+                    channel,
+                    permissions,
+                    commandsInstances,
+                    mongoTemplate
+                )
             }
         }
         return ""
