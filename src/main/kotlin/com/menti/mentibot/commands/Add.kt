@@ -37,9 +37,9 @@ class Add : BotCommand {
         val permissionsToInsert = message.split(" ")[1].trim()
         var toJoin = message.split(" ")[2].trim()
 
-        val user =
+        val userInDb =
             mongoTemplate.findOne(Query().addCriteria(Criteria.where("name").`is`(userToInsert)), UserModel::class.java)
-        if (user != null) {
+        if (userInDb != null) {
             return "User Already exists in DB!"
         }
 

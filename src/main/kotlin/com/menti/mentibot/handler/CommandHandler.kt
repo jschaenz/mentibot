@@ -47,7 +47,7 @@ class CommandHandler(
             .collect(Collectors.toSet()) as Set<Class<BotCommand>>
 
         for (command in commands) {
-            commandsInstances.add(command.newInstance())
+            commandsInstances.add(command.getDeclaredConstructor().newInstance())
         }
 
         //jvm
