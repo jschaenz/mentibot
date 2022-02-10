@@ -2,10 +2,16 @@ package com.menti.mentibot.handler
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.menti.mentibot.config.BotConfig
+import com.menti.mentibot.enums.CustomPermissionEnum
+import com.menti.mentibot.model.UserModel
 import com.menti.mentibot.properties.BotProperties
+import com.mongodb.client.model.Filters
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import kotlinx.coroutines.*
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 
 /**
  * Handles all public (regular chat) messages
@@ -20,6 +26,9 @@ class PublicMessageHandler(
 
     @Autowired
     private val commandHandler: CommandHandler,
+
+    @Autowired
+    private val mongoTemplate: MongoTemplate
 ) {
 
     private var lastMessage: String = ""
@@ -39,6 +48,9 @@ class PublicMessageHandler(
     private fun setup() = runBlocking {
         config.twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
             if (event.message.startsWith(properties.prefix) && !timedOut) {
+
+                addUserToDB(event.user.name)
+
                 GlobalScope.launch {
                     send(
                         commandHandler.invokeCommand(
@@ -56,6 +68,23 @@ class PublicMessageHandler(
                     timedOut = false
                 }
             }
+        }
+    }
+
+
+    private fun addUserToDB(name: String) {
+
+        val userInDb = mongoTemplate.getCollection("users")
+            .find(Filters.eq("name", name))
+            .first()
+
+        if (userInDb == null) {
+            mongoTemplate.insert(
+                UserModel(
+                    name,
+                    CustomPermissionEnum.DEFAULT
+                ), "users"
+            )
         }
     }
 

@@ -24,7 +24,7 @@ class Part(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConne
         permissions: UserModel?,
         commands: Set<BotCommand>
     ): String {
-        if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {
+        if (permissions?.permission == CustomPermissionEnum.DEFAULT) {
             return ""
         }
         var channelToLeave = message.split(" ")[0].lowercase()

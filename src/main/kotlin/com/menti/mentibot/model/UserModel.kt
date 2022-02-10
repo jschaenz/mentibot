@@ -1,6 +1,7 @@
 package com.menti.mentibot.model
 
 import com.menti.mentibot.enums.CustomPermissionEnum
+import com.mongodb.BasicDBObject
 import org.jetbrains.annotations.NotNull
 import org.springframework.data.mongodb.core.mapping.Document
 
@@ -10,8 +11,5 @@ class UserModel(
     val name: String,
 
     @NotNull
-    val permission: CustomPermissionEnum,
-
-    @NotNull
-    val joinedChannel: Boolean
+    val permission: CustomPermissionEnum
 )

@@ -30,7 +30,7 @@ class JS(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnect
         commands: Set<BotCommand>
     ): String {
 
-        if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {
+        if (permissions?.permission == CustomPermissionEnum.DEFAULT) {
             return ""
         }
 

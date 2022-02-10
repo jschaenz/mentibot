@@ -24,9 +24,9 @@ import javax.management.remote.JMXServiceURL
 @Component
 class CommandHandler(
     @Autowired
-    val mongoTemplate: MongoTemplate,
+    private val mongoTemplate: MongoTemplate,
     @Autowired
-    val config: BotConfig
+    private val config: BotConfig
 ) {
 
     private val commandsInstances: MutableSet<BotCommand> = mutableSetOf()
@@ -87,9 +87,14 @@ class CommandHandler(
             if (message.startsWith(command.commandName) && !timeOuts.contains(Pair(user, command.commandName))) {
 
                 val permissions =
-                    mongoTemplate.findOne(Query().addCriteria(Criteria.where("name").`is`(user)), UserModel::class.java)
+                    mongoTemplate.findOne(
+                        Query().addCriteria(
+                            Criteria.where("name").`is`(user)
+                        ),
+                        UserModel::class.java
+                    )
 
-                if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {
+                if (permissions?.permission == CustomPermissionEnum.DEFAULT) {
                     setTimeout(user, command)
                 }
 
