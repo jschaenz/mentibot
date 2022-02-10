@@ -8,19 +8,20 @@ import javax.management.MBeanServerConnection
 /**
  * Template for Bot Commands
  */
-interface BotCommand {
-    val commandName: String
-    val description: String
-    val cooldown: Int
-    fun call(
+abstract class BotCommand(
+    val mongoTemplate: MongoTemplate,
+    val mbeanServerConnection: MBeanServerConnection,
+    val config: BotConfig
+) {
+    abstract val commandName: String
+    abstract val description: String
+    abstract val cooldown: Int
+    abstract fun call(
         message: String,
         channel: String,
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
         commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
-    ): String
+        ): String
 }

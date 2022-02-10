@@ -9,27 +9,26 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import javax.management.MBeanServerConnection
 
-class WhoIs : BotCommand {
+class WhoIs(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
     override val commandName: String = "whois"
 
     override val description: String = "Gives an overview of what the bot knows about you"
 
     override val cooldown: Int = 10
-
     override fun call(
         message: String,
         channel: String,
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
         var userToQuery = message.split(" ")[0].lowercase()
 
-        if(userToQuery.isEmpty()){
+        if (userToQuery.isEmpty()) {
             userToQuery = user.lowercase()
         }
 

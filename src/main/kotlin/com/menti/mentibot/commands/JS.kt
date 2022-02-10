@@ -10,7 +10,10 @@ import javax.management.MBeanServerConnection
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 
-class JS : BotCommand{
+class JS(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
 
     override val commandName: String = "js"
 
@@ -24,10 +27,7 @@ class JS : BotCommand{
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
 
         if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {

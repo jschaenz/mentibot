@@ -7,24 +7,22 @@ import com.menti.mentibot.model.UserModel
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
-class Commands : BotCommand {
-
+class Commands(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
     override val commandName: String = "commands"
 
     override val description: String = "Lists all commands"
 
     override val cooldown: Int = 5
-
     override fun call(
         message: String,
         channel: String,
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
         var commandNames = ""
         commands.forEach { c ->

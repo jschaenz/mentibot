@@ -7,7 +7,10 @@ import com.menti.mentibot.model.UserModel
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
-class Pipe : BotCommand {
+class Pipe(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
     override val commandName: String = "pipe"
 
     override val description: String = "Allows chaining of multiple commands. ]pipe command1 > command2 > command3"
@@ -20,10 +23,7 @@ class Pipe : BotCommand {
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
         if (message.isEmpty()) {
             return "at least 1 command must be piped"
@@ -42,10 +42,7 @@ class Pipe : BotCommand {
                         user,
                         roles,
                         permissions,
-                        commands,
-                        mongoTemplate,
-                        mbeanServerConnection,
-                        config
+                        commands
                     )
                 }
             }

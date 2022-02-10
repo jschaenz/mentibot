@@ -10,24 +10,23 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import javax.management.MBeanServerConnection
 
-class Add : BotCommand {
+class Add(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
     override val commandName: String = "add"
 
     override val description: String =
         "Adds the given user with the given parameters to the db. ]add <user> <permission> <join?true:false>"
 
     override val cooldown: Int = 5
-
     override fun call(
         message: String,
         channel: String,
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
         if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {
             return ""
@@ -51,10 +50,7 @@ class Add : BotCommand {
                 userToInsert,
                 roles,
                 permissions,
-                commands,
-                mongoTemplate,
-                mbeanServerConnection,
-                config
+                commands
             )
         }
 
@@ -68,4 +64,5 @@ class Add : BotCommand {
 
         return "user $userToInsert saved to db"
     }
+
 }

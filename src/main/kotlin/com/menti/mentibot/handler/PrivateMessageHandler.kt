@@ -29,8 +29,7 @@ class PrivateMessageHandler(
                         event.message.replace(properties.prefix, ""),
                         event.user.name,
                         event.user.name,
-                        event.permissions,
-                        config
+                        event.permissions
                     ),
                     event.user.name
                 )

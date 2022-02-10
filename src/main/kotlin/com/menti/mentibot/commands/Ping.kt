@@ -11,7 +11,10 @@ import java.lang.management.RuntimeMXBean
 import javax.management.MBeanServerConnection
 import javax.management.ObjectName
 
-class Ping : BotCommand {
+class Ping(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
 
     override val commandName: String = "ping"
 
@@ -25,10 +28,7 @@ class Ping : BotCommand {
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
         //bot
         val rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()

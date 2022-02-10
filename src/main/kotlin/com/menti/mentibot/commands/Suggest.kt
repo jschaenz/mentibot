@@ -9,7 +9,10 @@ import com.menti.mentibot.model.UserModel
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
-class Suggest : BotCommand {
+class Suggest(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
     override val commandName: String = "suggest"
 
     override val description: String = "Adds the given suggestion to the waiting list!"
@@ -22,10 +25,7 @@ class Suggest : BotCommand {
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
         val id: Long = mongoTemplate.getCollection("suggestions").countDocuments()
 

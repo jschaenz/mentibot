@@ -8,7 +8,10 @@ import com.menti.mentibot.model.UserModel
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
-class Part : BotCommand {
+class Part(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
     override val commandName: String = "part"
     override val description: String = "Leaves the given channel"
     override val cooldown: Int = 10
@@ -19,10 +22,7 @@ class Part : BotCommand {
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
         if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {
             return ""

@@ -45,8 +45,7 @@ class PublicMessageHandler(
                             event.message.replace(properties.prefix, ""),
                             event.user.name,
                             event.channel.name,
-                            event.permissions,
-                            config
+                            event.permissions
                         ),
                         event.channel.name
                     )

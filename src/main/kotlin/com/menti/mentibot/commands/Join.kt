@@ -8,7 +8,10 @@ import com.menti.mentibot.model.UserModel
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
-class Join : BotCommand {
+class Join(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+    BotCommand(
+        mongoTemplate, mbeanServerConnection, config
+    ) {
     override val commandName: String = "join"
     override val description: String = "Joins the given channel"
     override val cooldown: Int = 10
@@ -19,10 +22,7 @@ class Join : BotCommand {
         user: String,
         roles: Set<CommandPermission>,
         permissions: UserModel?,
-        commands: Set<BotCommand>,
-        mongoTemplate: MongoTemplate,
-        mbeanServerConnection: MBeanServerConnection,
-        config: BotConfig
+        commands: Set<BotCommand>
     ): String {
         if (permissions?.permission == CustomPermissionEnum.DEFAULT || permissions == null) {
             return ""

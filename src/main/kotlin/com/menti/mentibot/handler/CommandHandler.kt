@@ -24,7 +24,9 @@ import javax.management.remote.JMXServiceURL
 @Component
 class CommandHandler(
     @Autowired
-    val mongoTemplate: MongoTemplate
+    val mongoTemplate: MongoTemplate,
+    @Autowired
+    val config: BotConfig
 ) {
 
     private val commandsInstances: MutableSet<BotCommand> = mutableSetOf()
@@ -39,17 +41,6 @@ class CommandHandler(
      * Instantiates all classes in the commands package
      */
     init {
-        val commands = ClassPath.from(ClassLoader.getSystemClassLoader())
-            .allClasses
-            .stream()
-            .filter { t -> t.packageName == "com.menti.mentibot.commands" }
-            .map { t -> t.load() }
-            .collect(Collectors.toSet()) as Set<Class<BotCommand>>
-
-        for (command in commands) {
-            commandsInstances.add(command.getDeclaredConstructor().newInstance())
-        }
-
         //jvm
         val vmDescriptor = VirtualMachine.list().filter { it.displayName().contains("mentibot") }[0]
         connectedVm = VirtualMachine.attach(vmDescriptor)
@@ -63,12 +54,35 @@ class CommandHandler(
         }
 
         mbeanServerConnection = JMXConnectorFactory.connect(JMXServiceURL(connectorAddress)).mBeanServerConnection
+
+        val commands = ClassPath.from(ClassLoader.getSystemClassLoader())
+            .allClasses
+            .stream()
+            .filter { t -> t.packageName == "com.menti.mentibot.commands" }
+            .map { t -> t.load() }
+            .collect(Collectors.toSet()) as Set<Class<BotCommand>>
+
+        for (command in commands) {
+            var params = Array<Class<*>>(command.constructors[0].parameterCount) { mongoTemplate::class.java }
+            command.constructors.forEach {
+                it.parameters.forEachIndexed { index, parameter -> params[index] = parameter.type }
+            }
+            commandsInstances.add(
+                command.getConstructor(*params)
+                    .newInstance(mongoTemplate, mbeanServerConnection, config)
+            )
+        }
     }
 
     /**
      * Invokes the correct command
      */
-    fun invokeCommand(message: String, user: String, channel: String, roles: Set<CommandPermission>, config: BotConfig): String {
+    fun invokeCommand(
+        message: String,
+        user: String,
+        channel: String,
+        roles: Set<CommandPermission>
+    ): String {
         for (command in commandsInstances) {
             if (message.startsWith(command.commandName) && !timeOuts.contains(Pair(user, command.commandName))) {
 
@@ -85,10 +99,7 @@ class CommandHandler(
                     user,
                     roles,
                     permissions,
-                    commandsInstances,
-                    mongoTemplate,
-                    mbeanServerConnection,
-                    config
+                    commandsInstances
                 )
             }
         }
