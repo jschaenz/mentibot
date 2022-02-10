@@ -1,4 +1,5 @@
 ![build ubuntu](https://github.com/jschaenz/mentibot/actions/workflows/gradle-build-ubuntu.yml/badge.svg)
+
 ![build windows](https://github.com/jschaenz/mentibot/actions/workflows/gradle-build-windows.yml/badge.svg)
 
 # mentibot
