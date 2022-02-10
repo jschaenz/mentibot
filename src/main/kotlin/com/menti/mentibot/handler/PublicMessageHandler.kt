@@ -83,7 +83,8 @@ class PublicMessageHandler(
                 UserModel(
                     name,
                     CustomPermissionEnum.DEFAULT
-                ), "users"
+                ),
+                "users"
             )
         }
     }

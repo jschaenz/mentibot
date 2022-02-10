@@ -27,3 +27,5 @@ jobs:
           distribution: 'adopt'
       - name: Build with Gradle
         run: ./gradlew build
+        with:
+          arguments: build
