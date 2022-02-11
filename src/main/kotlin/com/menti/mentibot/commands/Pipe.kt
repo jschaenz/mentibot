@@ -37,7 +37,7 @@ class Pipe(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConne
             for (command in commands) {
                 if (commandToInvoke.startsWith(command.commandName)) {
                     lastResult = command.call(
-                        lastResult,
+                        lastResult.replace(command.commandName, ""),
                         channel,
                         user,
                         roles,
