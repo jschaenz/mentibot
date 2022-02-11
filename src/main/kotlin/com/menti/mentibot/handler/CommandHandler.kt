@@ -4,6 +4,7 @@ import com.github.twitch4j.common.enums.CommandPermission
 import com.google.common.reflect.ClassPath
 import com.menti.mentibot.config.BotCommand
 import com.menti.mentibot.config.BotConfig
+import com.menti.mentibot.config.VMConnector
 import com.menti.mentibot.enums.CustomPermissionEnum
 import com.menti.mentibot.model.UserModel
 import com.sun.tools.attach.VirtualMachine
@@ -26,35 +27,19 @@ class CommandHandler(
     @Autowired
     private val mongoTemplate: MongoTemplate,
     @Autowired
-    private val config: BotConfig
+    private val config: BotConfig,
+    @Autowired
+    private val vmConnector: VMConnector
 ) {
 
     private val commandsInstances: MutableSet<BotCommand> = mutableSetOf()
 
     private val timeOuts: MutableSet<Pair<String, String>> = mutableSetOf()
 
-    private val connectedVm: VirtualMachine
-
-    private val mbeanServerConnection: MBeanServerConnection
-
     /**
      * Instantiates all classes in the commands package
      */
     init {
-        //jvm
-        val vmDescriptor = VirtualMachine.list().filter { it.displayName().contains("mentibot") }[0]
-        connectedVm = VirtualMachine.attach(vmDescriptor)
-
-        var connectorAddress =
-            connectedVm.agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress")
-        if (connectorAddress == null) {
-            connectedVm.startLocalManagementAgent()
-            connectorAddress =
-                connectedVm.agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress")
-        }
-
-        mbeanServerConnection = JMXConnectorFactory.connect(JMXServiceURL(connectorAddress)).mBeanServerConnection
-
         val commands = ClassPath.from(ClassLoader.getSystemClassLoader())
             .allClasses
             .stream()
@@ -69,7 +54,7 @@ class CommandHandler(
             }
             commandsInstances.add(
                 command.getConstructor(*params)
-                    .newInstance(mongoTemplate, mbeanServerConnection, config)
+                    .newInstance(mongoTemplate, vmConnector.mbeanServerConnection, config)
             )
         }
     }

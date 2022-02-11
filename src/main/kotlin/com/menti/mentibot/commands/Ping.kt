@@ -43,6 +43,6 @@ class Ping(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConne
         val loadedClasses =
             mbeanServerConnection.getAttribute(ObjectName("java.lang:type=ClassLoading"), "TotalLoadedClassCount")
 
-        return "uptime: ${rb.uptime / 1000}s running on JVM: ${rb.vmVersion} items in db: $totalDbObjects across $collectionCount collections with $loadedClasses loaded classes"
+        return "uptime: ${rb.uptime / 1000}s running JVM: ${rb.vmVersion} on ${rb.systemProperties["os.version"]}. Items in db: $totalDbObjects across $collectionCount collections with $loadedClasses loaded classes"
     }
 }
