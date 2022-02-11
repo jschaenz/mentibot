@@ -4,7 +4,9 @@ import com.github.twitch4j.common.enums.CommandPermission
 import com.menti.mentibot.config.BotCommand
 import com.menti.mentibot.config.BotConfig
 import com.menti.mentibot.enums.CustomPermissionEnum
+import com.menti.mentibot.model.ChannelsToJoinModel
 import com.menti.mentibot.model.UserModel
+import com.mongodb.client.model.Filters
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
@@ -27,12 +29,32 @@ class Part(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConne
         if (permissions?.permission == CustomPermissionEnum.DEFAULT) {
             return ""
         }
+
         var channelToLeave = message.split(" ")[0].lowercase()
-        try {
+
+        if (message.contains("-save")) {
+            val result = mongoTemplate.getCollection("channels")
+                .find(Filters.eq("_id", channelToLeave))
+                .first()
+            return if (result != null) {
+                try {
+                    mongoTemplate.remove(result, "channels")
+
+                    config.twitchClient.chat.leaveChannel(channelToLeave)
+                    "persistently left channel $channelToLeave"
+                } catch (e: Exception) {
+                    "${e.message}"
+                }
+            } else {
+                "cannot leave $channelToLeave, never joined!"
+            }
+        }
+
+        return try {
             config.twitchClient.chat.leaveChannel(channelToLeave)
-            return "left channel $channelToLeave"
+            "left channel $channelToLeave"
         } catch (e: Exception) {
-            return "${e.message}"
+            "${e.message}"
         }
     }
 }
