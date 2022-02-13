@@ -41,10 +41,10 @@ class Git(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnec
                 .ofString()
         )
             .body()
-            .split(",")[66]
+            .split(",")[67]
             .replace("\"", "")
-            .replace("updated_at", "")
+            .replace("pushed_at:", "")
 
-        return "https://github.com/jschaenz/mentibot last update$response"
+        return "https://github.com/jschaenz/mentibot last update: $response"
     }
 }
