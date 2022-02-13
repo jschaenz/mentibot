@@ -25,7 +25,7 @@ class Bot(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnec
         permissions: UserModel?,
         commands: Set<BotCommand>
     ): String {
-        return "mentibot is a bot made by mentiofficial, written in Kotlin"
+        return "mentibot v3 is a bot made by mentiofficial, written in Kotlin"
     }
 
 }
