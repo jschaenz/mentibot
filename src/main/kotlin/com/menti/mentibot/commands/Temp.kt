@@ -8,13 +8,13 @@ import com.menti.mentibot.model.UserModel
 import org.springframework.data.mongodb.core.MongoTemplate
 import javax.management.MBeanServerConnection
 
-class Kanye(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
+class Temp(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConnection, config: BotConfig) :
     BotCommand(
         mongoTemplate, mbeanServerConnection, config
     ) {
-    override val commandName: String = "kanye"
+    override val commandName: String = "temp"
 
-    override val description: String = "Returns a random Kanye West quote"
+    override val description: String = "returns current server room temperature"
 
     override val cooldown: Int = 5
 
@@ -26,12 +26,14 @@ class Kanye(mongoTemplate: MongoTemplate, mbeanServerConnection: MBeanServerConn
         permissions: UserModel?,
         commands: Set<BotCommand>
     ): String {
-        return "https://api.kanye.rest"
+
+        return "current room temperature: " + "http://192.168.0.6/temp"
             .httpGet()
             .responseString()
             .third
             .get()
-            .replace("{\"quote\":\"", "")
-            .replace("\"}", "")
+            .split(",")[2]
+            .replace("\"compensated\":", "")
+            .replace(",\"offset\":0}", "") + "°C"
     }
 }
